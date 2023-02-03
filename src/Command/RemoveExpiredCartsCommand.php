@@ -18,7 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class RemoveExpiredCartsCommand extends Command
 {
-    protected static $defaultName = 'RemoveExpiredCartsCommand';
+    protected static $defaultName = 'app:removeExpiredCarts';
 
     private $entityManager;
 
@@ -54,18 +54,16 @@ class RemoveExpiredCartsCommand extends Command
             return Command::FAILURE;
         }
 
-        // Subtracts the number of days from the current date.
         $limitDate = new \DateTime("- $days days");
         $expiredCartsCount = 0;
 
         while($carts = $this->orderRepository->findCartsNotModifiedSince($limitDate)) {
             foreach ($carts as $cart) {
-                // Items will be deleted on cascade
                 $this->entityManager->remove($cart);
             }
 
-            $this->entityManager->flush(); // Executes all deletions
-            $this->entityManager->clear(); // Detaches all object from Doctrine
+            $this->entityManager->flush();
+            $this->entityManager->clear();
 
             $expiredCartsCount += count($carts);
         };

@@ -24,18 +24,11 @@ class AppController extends AbstractController
     public function index(ManagerRegistry $doctrine, CartManager $manager): Response
     {
         $cart = $manager->getCurrentCart();
+        $repo = $doctrine->getRepository(Product::class);
 
-        $bestSeller = $doctrine
-            ->getRepository(Product::class)
-            ->findThreeBestsellers();
-
-        $topOffers = $doctrine
-            ->getRepository(Product::class)
-            ->findThreeTop();
-
-        $bestRated = $doctrine
-            ->getRepository(Product::class)
-            ->findThreeBestRated();
+        $bestSeller = $repo->findThreeBestsellers();
+        $topOffers = $repo->findThreeTop();
+        $bestRated = $repo->findThreeBestRated();
 
         return $this->render('app/home.html.twig', [
             'cart' => $cart,

@@ -10,13 +10,10 @@
             <header class="text-center">
                 <h1 class="text-xl font-bold text-gray-900 sm:text-3xl">Your Cart</h1>
             </header>
-
             <div class="mt-8">
                 <ul class="space-y-4">
                     {% if cart.items.count > 0 %}
-
                         {{ form_start(form) }}
-
                         {% for item in form.items %}
                     <li class="flex items-center">
                         <img
@@ -43,7 +40,6 @@
                                 </div>
                             </dl>
                         </div>
-
                         <div class="flex items-center justify-end flex-1 gap-2">
                                 <label for="Line1Qty" class="sr-only"> Quantity </label>
                                 {{ form_widget(item.quantity, {
@@ -54,21 +50,18 @@
                             <div class="invalid-feedback">
                                 {{ form_errors(item.quantity) }}
                             </div>
-
-                            {{ form_widget(item.remove, {'attr': {'class': 'focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-2 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-1.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'}}) }}
-
+                            {{ form_widget(item.remove,
+                                {'attr': {
+                                    'class': 'focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-2 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-1.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'}})
+                            }}
                             <b>{{ item.vars.data.product.price }} €</b>
                         </div>
-
                     </li>
                         {% endfor %}
-
                         {{ form_widget(form.save, {'attr': {'class': 'text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700'}}) }}
                         {{ form_widget(form.clear, {'attr': {'class': 'text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700'}}) }}
-
                         {{ form_end(form) }}
                 </ul>
-
                 <div class="flex justify-end pt-8 mt-8 border-t border-gray-100">
                     <div class="w-screen max-w-lg space-y-4">
                         <dl class="space-y-0.5 text-sm text-gray-700">
@@ -102,11 +95,9 @@
         </div>
     </div>
 </section>
-
         {% else %}
             <div class="alert alert-info">
                 Your cart is empty. Go to the <a href="{{ path('app_products') }}">product list</a>.
             </div>
         {% endif %}
-    </div>
     {% endblock %}
