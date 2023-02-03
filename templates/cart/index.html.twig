@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cart{% endblock %}
+
+{% block body %}
+
+<section>
+    <div class="mt-20 max-w-screen-xl px-4 py-8 mx-auto sm:px-6 sm:py-12 lg:px-8">
+        <div class="max-w-3xl mx-auto">
+            <header class="text-center">
+                <h1 class="text-xl font-bold text-gray-900 sm:text-3xl">Your Cart</h1>
+            </header>
+
+            <div class="mt-8">
+                <ul class="space-y-4">
+                    {% if cart.items.count > 0 %}
+
+                        {{ form_start(form) }}
+
+                        {% for item in form.items %}
+                    <li class="flex items-center">
+                        <img
+                                src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=830&q=80"
+                                alt=""
+                                class="object-cover w-16 h-16 rounded"
+                        />
+                        <div class="ml-4">
+                            <h3 class="text-sm text-gray-900">{{ item.vars.data.product.name }}</h3>
+
+                            <dl class="mt-0.5 space-y-px text-[10px] text-gray-600">
+                                <div>
+                                    <dt class="inline">Category:</dt>
+                                    <dd class="inline">{{ item.vars.data.product.category }}</dd>
+                                </div>
+
+                                <small>{{ item.vars.data.product.description[:50] }}</small>
+
+                                <div>
+                                    <dt class="inline">Rating:</dt>
+                                    <dd class="flex">{% for i in 1..item.vars.data.product.rating  %}
+                                            <svg aria-hidden="true" class="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                        {% endfor %}</dd>
+                                </div>
+                            </dl>
+                        </div>
+
+                        <div class="flex items-center justify-end flex-1 gap-2">
+                                <label for="Line1Qty" class="sr-only"> Quantity </label>
+                                {{ form_widget(item.quantity, {
+                                    'attr': {
+                                        'class': 'form-control form-control-sm ' ~ (item.quantity.vars.valid ? '' : 'is-invalid')
+                                    }
+                                }) }}
+                            <div class="invalid-feedback">
+                                {{ form_errors(item.quantity) }}
+                            </div>
+
+                            {{ form_widget(item.remove, {'attr': {'class': 'focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-2 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-1.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900'}}) }}
+
+                            <b>{{ item.vars.data.product.price }} €</b>
+                        </div>
+
+                    </li>
+                        {% endfor %}
+
+                        {{ form_widget(form.save, {'attr': {'class': 'text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700'}}) }}
+                        {{ form_widget(form.clear, {'attr': {'class': 'text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700'}}) }}
+
+                        {{ form_end(form) }}
+                </ul>
+
+                <div class="flex justify-end pt-8 mt-8 border-t border-gray-100">
+                    <div class="w-screen max-w-lg space-y-4">
+                        <dl class="space-y-0.5 text-sm text-gray-700">
+                            <div class="flex justify-between">
+                                <dt>Subtotal</dt>
+                                <dd>{{ cart.total }} €</dd>
+                            </div>
+
+                            <div class="flex justify-between">
+                                <dt>Shipping</dt>
+                                <dd>25 €</dd>
+                            </div>
+
+                            <div class="flex justify-between !text-base font-medium">
+                                <dt>Total</dt>
+                                <dd>{{ cart.totalWithShipping }} €</dd>
+                            </div>
+                        </dl>
+
+                        <div class="flex justify-end">
+                            <a
+                                    href="#"
+                                    class="block px-5 py-3 text-sm text-gray-100 transition bg-gray-700 rounded hover:bg-gray-600"
+                            >
+                                Checkout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+        {% else %}
+            <div class="alert alert-info">
+                Your cart is empty. Go to the <a href="{{ path('app_products') }}">product list</a>.
+            </div>
+        {% endif %}
+    </div>
+    {% endblock %}
