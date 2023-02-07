@@ -105,14 +105,21 @@ class Product
 
     public function getImageUri(): ?string
     {
-        return $this->image_uri;
+        if (!$this->image_uri) {
+            return null;
+        }
+
+        if (strpos($this->image_uri, '/') !== false) {
+            return $this->image_uri;
+        }
+
+        return sprintf('/uploads/products/%s', $this->image_uri);
+
     }
 
-    public function setImageUri(?string $image_uri): self
+    public function setImageUri(?string $image_uri): void
     {
         $this->image_uri = $image_uri;
-
-        return $this;
     }
 
     public function getRating(): ?int

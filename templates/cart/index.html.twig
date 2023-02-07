@@ -96,8 +96,8 @@
     </div>
 </section>
         {% else %}
-            <div class="alert alert-info">
-                Your cart is empty. Go to the <a href="{{ path('app_products') }}">product list</a>.
+            <div class="alert alert-info text-2xl">
+                Your cart is empty. Go to the <a href="{{ path('app_products') }}" class="text-red-600">product list</a>.
             </div>
         {% endif %}
     {% endblock %}

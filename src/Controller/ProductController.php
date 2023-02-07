@@ -50,12 +50,9 @@ class ProductController extends AbstractController
                 ->setUpdatedAt(new \DateTime());
 
             $manager->save($cart);
-            $this->addFlash('success', 'Product Added! Check your cart!');
 
             return $this->redirectToRoute('app_product_detail', ['id' => $product->getId()]);
         }
-
-        $this->addFlash('limit', 'Product limit!');
 
         return $this->render('product/detail.html.twig', [
             'product' => $product,
@@ -89,6 +86,39 @@ class ProductController extends AbstractController
         else{
             $this->addFlash('found', 'Product found! Phrase: ');
         }
+
+        return $this->render('product/search.html.twig',[
+            'pager' => $pagination,
+            'cart' => $cart,
+            'searchName' => $productName
+        ]);
+    }
+
+    #[Route('/products/category/search', name: 'app_product_category', methods: ['POST', 'GET'])]
+    public function showCategory(Request $request,PaginatorInterface $paginator, CartManager $manager, EntityManagerInterface $entityManager)
+    {
+        $cart = $manager->getCurrentCart();
+
+        $productName = $request
+            ->request
+            ->get('m','qu');
+
+        $productsFound = $entityManager
+            ->getRepository(Product::class)
+            ->findByCategory($productName);
+
+        if(empty($productsFound)){
+            $this->addFlash('notfound', 'Product not found!');
+        }
+        else{
+            $this->addFlash('found', 'Product found! Phrase: ');
+        }
+
+        $pagination = $paginator->paginate(
+            $productsFound,
+            $request->query->getInt('page', 1),
+            10
+        );
 
         return $this->render('product/search.html.twig',[
             'pager' => $pagination,
