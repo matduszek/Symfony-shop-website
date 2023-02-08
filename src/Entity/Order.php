@@ -151,4 +151,14 @@ class Order
 
         return $total;
     }
+
+    public function __toString(): string
+    {
+        $cartId = $this->getId();
+
+        if ($cartId === null) {
+            return '';
+        }
+        return 'Cart ID: ' . $cartId . ' Product ID: ...';
+    }
 }

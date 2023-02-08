@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Order;
 use App\Entity\Product;
 use App\Form\AddToCartType;
 use App\Manager\CartManager;
@@ -34,7 +35,7 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/{id}', name: 'app_product_detail')]
-    public function detail( Product $product, Request $request, CartManager $manager)
+    public function detail(Product $product, Request $request, CartManager $manager)
     {
         $form = $this->createForm(AddToCartType::class);
         $cartInd = $manager->getCurrentCart();
@@ -42,6 +43,14 @@ class ProductController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $item = $form->getData();
+
+            if($item->getQuantity() > $product->getAmountOfProducts()) {
+
+                $this->addFlash('fail','Not enough products in stock!');
+
+                return $this->redirectToRoute('app_product_detail', ['id' => $product->getId()]);
+            }
+
             $item->setProduct($product);
 
             $cart = $manager->getCurrentCart();
@@ -50,6 +59,8 @@ class ProductController extends AbstractController
                 ->setUpdatedAt(new \DateTime());
 
             $manager->save($cart);
+
+            $this->addFlash('success','Product added!');
 
             return $this->redirectToRoute('app_product_detail', ['id' => $product->getId()]);
         }

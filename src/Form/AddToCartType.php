@@ -2,7 +2,11 @@
 
 namespace App\Form;
 
+use App\Entity\Order;
 use App\Entity\OrderItem;
+use App\Entity\Product;
+use App\Repository\ProductRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
