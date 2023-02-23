@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Product;
 use App\Form\AddToCartType;
 use App\Manager\CartManager;
+use App\Repository\CommentsRepository;
 use App\Repository\OrderItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -43,7 +44,7 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/{slug}', name: 'app_product_detail')]
-    public function detail(Product $product, Request $request, CartManager $manager)
+    public function detail(Product $product, Request $request, CartManager $manager, CommentsRepository $commentsRepository)
     {
         $form = $this->createForm(AddToCartType::class);
         $cartInd = $manager->getCurrentCart();
@@ -81,10 +82,13 @@ class ProductController extends AbstractController
             return $this->redirectToRoute('app_product_detail', ['slug' => $product->getSlug()]);
         }
 
+        $comments = $commentsRepository->findBy(['product' => $product->getId()]);
+
         return $this->render('product/detail.html.twig', [
             'product' => $product,
             'form' => $form->createView(),
-            'cart' => $cartInd
+            'cart' => $cartInd,
+            'comments' => $comments
         ]);
     }
 

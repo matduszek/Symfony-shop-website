@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -41,6 +43,14 @@ class Product
 
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
+
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Comments::class)]
+    private Collection $commentRef;
+
+    public function __construct()
+    {
+        $this->commentRef = new ArrayCollection();
+    }
 
     public function computeSlug(SluggerInterface $slugger): void
     {
@@ -158,6 +168,36 @@ class Product
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comments>
+     */
+    public function getCommentRef(): Collection
+    {
+        return $this->commentRef;
+    }
+
+    public function addCommentRef(Comments $commentRef): self
+    {
+        if (!$this->commentRef->contains($commentRef)) {
+            $this->commentRef->add($commentRef);
+            $commentRef->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentRef(Comments $commentRef): self
+    {
+        if ($this->commentRef->removeElement($commentRef)) {
+            // set the owning side to null (unless already changed)
+            if ($commentRef->getProduct() === $this) {
+                $commentRef->setProduct(null);
+            }
+        }
 
         return $this;
     }
