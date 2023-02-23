@@ -6,6 +6,7 @@ use App\Repository\ProductRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -37,6 +38,16 @@ class Product
 
     #[ORM\Column]
     private ?int $rating = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
+    public function computeSlug(SluggerInterface $slugger): void
+    {
+        if (!$this->slug || '-' === $this->slug) {
+            $this->slug = (string) $slugger->slug((string) $this)->lower();
+        }
+    }
 
     public function getId(): ?int
     {
@@ -137,5 +148,17 @@ class Product
     public function __toString(): string
     {
         return (string) $this->getCategory();
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 }

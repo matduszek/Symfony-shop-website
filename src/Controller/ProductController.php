@@ -34,7 +34,7 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/product/{id}', name: 'app_product_detail')]
+    #[Route('/product/{slug}', name: 'app_product_detail')]
     public function detail(Product $product, Request $request, CartManager $manager)
     {
         $form = $this->createForm(AddToCartType::class);
@@ -48,7 +48,7 @@ class ProductController extends AbstractController
 
                 $this->addFlash('fail','Not enough products in stock!');
 
-                return $this->redirectToRoute('app_product_detail', ['id' => $product->getId()]);
+                return $this->redirectToRoute('app_product_detail', ['slug' => $product->getSlug()]);
             }
 
             $item->setProduct($product);
@@ -62,7 +62,7 @@ class ProductController extends AbstractController
 
             $this->addFlash('success','Product added!');
 
-            return $this->redirectToRoute('app_product_detail', ['id' => $product->getId()]);
+            return $this->redirectToRoute('app_product_detail', ['slug' => $product->getSlug()]);
         }
 
         return $this->render('product/detail.html.twig', [

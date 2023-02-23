@@ -46,12 +46,16 @@ final class ProductFactory extends ModelFactory
      */
     protected function getDefaults(): array
     {
+        $data = self::faker()->unique()->realText(20);
+
         return [
             'amount_of_products' => self::faker()->numberBetween(0,50),
             'category' => self::faker()->randomElement(['Building materials','Tools','Gardening and outdoor','Paint and decorating','Electrical supplies']),
-            'name' => self::faker()->text(20),
+            'name' => $data,
+            'description' => self::faker()->realText(80),
             'price' => self::faker()->randomFloat(2,1,500),
             'rating' => self::faker()->numberBetween(0,5),
+            'slug' => $data
         ];
     }
 

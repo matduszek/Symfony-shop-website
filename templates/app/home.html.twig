@@ -53,7 +53,7 @@
 
                             <div class="flex items-center justify-between">
                                 <span class="text-left text-3xl font-bold text-gray-900 dark:text-white">{{ bestseller.price }} €</span>
-                                <a href="{{ path('app_product_detail', {id: bestseller.id}) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                <a href="{{ path('app_product_detail', {slug: bestseller.slug}) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                     View details
                                 </a>
                             </div>
@@ -85,7 +85,7 @@
                                 <span class="text-3xl font-bold text-gray-900 dark:text-white">
                                     <span class="text-xl font-bold text-gray-900 dark:text-gray-400 line-through">{{ topoffer.price + 24 }} </span><span class="text-3xl font-bold text-gray-900 dark:text-white">{{ topoffer.price }}</span>
                                     </span>
-                                <a href="{{ path('app_product_detail', {id: topoffer.id}) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                <a href="{{ path('app_product_detail', {slug: topoffer.slug}) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                     View details
                                 </a>
                             </div>
@@ -115,7 +115,7 @@
                             </div>
                             <div class="flex items-center justify-between">
                                 <span class="text-3xl font-bold text-gray-900 dark:text-white">{{ rated.price }}</span>
-                                <a href="{{ path('app_product_detail', {id: rated.id}) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                <a href="{{ path('app_product_detail', {slug: rated.slug}) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                     View details
                                 </a>
                             </div>
