@@ -39,6 +39,17 @@ class OrderItemRepository extends ServiceEntityRepository
         }
     }
 
+    public function getProductQuantityFromCart($productId): array
+    {
+        return $this->createQueryBuilder('o')
+            ->select('o.quantity')
+            ->andWhere('o.product = :val')
+            ->setParameter('val', $productId)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 //    /**
 //     * @return OrderItem[] Returns an array of OrderItem objects
 //     */

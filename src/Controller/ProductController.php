@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Order;
 use App\Entity\Product;
 use App\Form\AddToCartType;
 use App\Manager\CartManager;
+use App\Repository\OrderItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
@@ -13,9 +13,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function PHPUnit\Framework\isEmpty;
+use function PHPUnit\Framework\isNull;
 
 class ProductController extends AbstractController
 {
+    private OrderItemRepository $orderItem;
+
+    public function __construct(OrderItemRepository $orderItem){
+        $this->orderItem = $orderItem;
+    }
+
     #[Route('/products', name: 'app_products')]
     public function products(ManagerRegistry $doctrine, CartManager $manager, PaginatorInterface $paginator, Request $request): Response
     {
@@ -44,13 +52,21 @@ class ProductController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $item = $form->getData();
 
-            if($item->getQuantity() > $product->getAmountOfProducts()) {
+            $productQuantityFromCart = $this->orderItem->getProductQuantityFromCart($product->getId());
 
-                $this->addFlash('fail','Not enough products in stock!');
+            if ($item->getQuantity() > $product->getAmountOfProducts()) {
+                $this->addFlash('fail', 'Not enough products in stock!');
 
                 return $this->redirectToRoute('app_product_detail', ['slug' => $product->getSlug()]);
             }
+            if(isset($productQuantityFromCart[0]['quantity'])) {
+                if(($item->getQuantity() + $productQuantityFromCart[0]['quantity']) > $product->getAmountOfProducts()) {
+                    $this->addFlash('fail', 'Not enough products in stock!');
 
+                    return $this->redirectToRoute('app_product_detail', ['slug' => $product->getSlug()]);
+                }
+            }
+            
             $item->setProduct($product);
 
             $cart = $manager->getCurrentCart();
