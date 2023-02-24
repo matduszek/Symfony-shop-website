@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Comments;
 use App\Entity\Product;
 use App\Form\AddToCartType;
+use App\Form\CommentType;
 use App\Manager\CartManager;
 use App\Repository\CommentsRepository;
 use App\Repository\OrderItemRepository;
@@ -44,11 +46,29 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/{slug}', name: 'app_product_detail')]
-    public function detail(Product $product, Request $request, CartManager $manager, CommentsRepository $commentsRepository)
+    public function detail(Product $product, Request $request, EntityManagerInterface $entityManager, CartManager $manager, CommentsRepository $commentsRepository)
     {
         $form = $this->createForm(AddToCartType::class);
+        $commentForm = $this->createForm(CommentType::class);
+
         $cartInd = $manager->getCurrentCart();
+
         $form->handleRequest($request);
+        $commentForm->handleRequest($request);
+
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $comment = $commentForm->getData();
+
+            $comment->setProduct($product);
+
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            $this->addFlash('comment','Product added!');
+
+            return $this->redirectToRoute('app_product_detail', ['slug' => $product->getSlug()]);
+
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $item = $form->getData();
@@ -88,7 +108,8 @@ class ProductController extends AbstractController
             'product' => $product,
             'form' => $form->createView(),
             'cart' => $cartInd,
-            'comments' => $comments
+            'comments' => $comments,
+            'commentform' => $commentForm->createView()
         ]);
     }
 
